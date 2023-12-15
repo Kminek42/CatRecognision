@@ -5,6 +5,10 @@ import torch.nn as nn
 import matplotlib.pylab as plt
 import sys
 
+if len(sys.argv) != 2:
+    print("Usage: python classify.py <path to image>")
+    sys.exit(2)
+
 # load model -------------------------------------------------------------------
 model = nn.Sequential(
     nn.Conv2d(3, 16, 5),
