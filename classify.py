@@ -47,8 +47,8 @@ image_tensor = image_tensor.unsqueeze(0)
 
 # forward pass -----------------------------------------------------------------
 output = model.forward(image_tensor)
-output = torch.softmax(output, dim=1)
-print(output)
+# output = torch.softmax(output, dim=1)
+# print(output)
 
 if output[0][0] > output[0][1]:
     print("This is a cat!")
