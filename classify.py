@@ -11,11 +11,14 @@ if len(sys.argv) != 2:
 
 # load model -------------------------------------------------------------------
 model = nn.Sequential(
-    nn.Conv2d(3, 16, 5),
-    nn.MaxPool2d((5, 5)),
+    nn.Conv2d(3, 16, 3),
+    nn.MaxPool2d((3, 3)),
+    nn.LeakyReLU(),
+    nn.Conv2d(16, 64, 3),
+    nn.MaxPool2d((3, 3)),
     nn.LeakyReLU(),
     nn.Flatten(),
-    nn.Linear(400, 64),
+    nn.Linear(256, 64),
     nn.LeakyReLU(),
     nn.Linear(64, 2)
 )
