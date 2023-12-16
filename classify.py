@@ -11,16 +11,15 @@ if len(sys.argv) < 2:
 
 # load model -------------------------------------------------------------------
 model = nn.Sequential(
-    nn.Conv2d(3, 16, 3),
+    nn.Conv2d(3, 64, 3),
     nn.MaxPool2d((3, 3)),
     nn.LeakyReLU(),
-    nn.Conv2d(16, 32, 3),
-    nn.MaxPool2d((3, 3)),
-    nn.LeakyReLU(),
-    nn.Conv2d(32, 64, 3),
+    nn.Conv2d(64, 64, 3),
     nn.MaxPool2d((3, 3)),
     nn.LeakyReLU(),
     nn.Flatten(),
+    nn.Linear(256, 64),
+    nn.LeakyReLU(),
     nn.Linear(64, 2)
 )
 
@@ -38,7 +37,7 @@ for i in range(1, len(sys.argv)):
     # Crop the image ---------------------------------------------------------------
     transform = transforms.Compose([
         transforms.CenterCrop(min(image.size)),
-        transforms.Resize((64, 64)),
+        transforms.Resize((32, 32)),
         transforms.ToTensor(),
     ])
 
