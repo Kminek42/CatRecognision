@@ -5,8 +5,8 @@ import torch.nn as nn
 import matplotlib.pylab as plt
 import sys
 
-if len(sys.argv) != 2:
-    print("Usage: python classify.py <path to image>")
+if len(sys.argv) < 2:
+    print("Usage: python classify.py path_to_image [more paths ...]")
     exit()
 
 # load model -------------------------------------------------------------------
@@ -24,34 +24,38 @@ model.load_state_dict(torch.load('model.pt'))
 model.eval()
 
 
-# Open the image file ----------------------------------------------------------
-image = Image.open(sys.argv[1])
+for i in range(1, len(sys.argv)):
+    # Open the image file ----------------------------------------------------------
+    image = Image.open(sys.argv[i])
 
-# Convert RGBA or BW to RGB ----------------------------------------------------
-image = image.convert('RGB')
+    # Convert RGBA or BW to RGB ----------------------------------------------------
+    image = image.convert('RGB')
 
-# Crop the image ---------------------------------------------------------------
-transform = transforms.Compose([
-    transforms.CenterCrop(min(image.size)),
-    transforms.Resize((32, 32)),
-    transforms.ToTensor(),
-])
+    # Crop the image ---------------------------------------------------------------
+    transform = transforms.Compose([
+        transforms.CenterCrop(min(image.size)),
+        transforms.Resize((32, 32)),
+        transforms.ToTensor(),
+    ])
 
-image_tensor = transform(image)
+    image_tensor = transform(image)
 
-plt.imshow(transforms.ToPILImage()(image_tensor))
-plt.show()
+    # add batch dimension ----------------------------------------------------------
+    image_tensor = image_tensor.unsqueeze(0)
 
-# add batch dimension ----------------------------------------------------------
-image_tensor = image_tensor.unsqueeze(0)
+    # forward pass -----------------------------------------------------------------
+    output = model.forward(image_tensor)
+    output = torch.softmax(output, dim=1)
+    print(output)
 
-# forward pass -----------------------------------------------------------------
-output = model.forward(image_tensor)
-output = torch.softmax(output, dim=1)
-print(output)
+    if output[0][0] > output[0][1]:
+        message = "This is a cat!"
 
-if output[0][0] > output[0][1]:
-    print("This is a cat!")
+    else:
+        message = "This is not a cat!"
 
-else:
-    print("This is not a cat!")
+    print(message)
+    confidence = round(float(max(output[0]) * 100), 2)
+    plt.title(f'{message} Confidence: {confidence}%')
+    plt.imshow(transforms.ToPILImage()(image_tensor[0]))
+    plt.show()
