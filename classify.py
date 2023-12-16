@@ -7,7 +7,7 @@ import sys
 
 if len(sys.argv) != 2:
     print("Usage: python classify.py <path to image>")
-    sys.exit(2)
+    exit()
 
 # load model -------------------------------------------------------------------
 model = nn.Sequential(
@@ -52,8 +52,6 @@ output = model.forward(image_tensor)
 
 if output[0][0] > output[0][1]:
     print("This is a cat!")
-    sys.exit(0)
 
 else:
     print("This is not a cat!")
-    sys.exit(1)
