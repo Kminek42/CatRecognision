@@ -14,13 +14,13 @@ model = nn.Sequential(
     nn.Conv2d(3, 64, 3),
     nn.MaxPool2d((3, 3)),
     nn.LeakyReLU(),
-    nn.Conv2d(64, 64, 3),
+    nn.Conv2d(64, 256, 3),
     nn.MaxPool2d((3, 3)),
     nn.LeakyReLU(),
     nn.Flatten(),
-    nn.Linear(256, 64),
+    nn.Linear(1024, 256),
     nn.LeakyReLU(),
-    nn.Linear(64, 2)
+    nn.Linear(256, 2)
 )
 
 model.load_state_dict(torch.load('model.pt'))
