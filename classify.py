@@ -10,17 +10,17 @@ if len(sys.argv) < 2:
     exit()
 
 # load model -------------------------------------------------------------------
+activation = nn.Tanh()
+
 model = nn.Sequential(
-    nn.Conv2d(3, 64, 3),
-    nn.MaxPool2d((3, 3)),
-    nn.LeakyReLU(),
-    nn.Conv2d(64, 256, 3),
-    nn.MaxPool2d((3, 3)),
-    nn.LeakyReLU(),
     nn.Flatten(),
-    nn.Linear(1024, 256),
-    nn.LeakyReLU(),
-    nn.Linear(256, 2)
+    nn.Linear(20*20*3, 64),
+    activation,
+    nn.Linear(64, 32),
+    activation,
+    nn.Linear(32, 16),
+    activation,
+    nn.Linear(16, 2)
 )
 
 model.load_state_dict(torch.load('model.pt'))
@@ -37,7 +37,7 @@ for i in range(1, len(sys.argv)):
     # Crop the image ---------------------------------------------------------------
     transform = transforms.Compose([
         transforms.CenterCrop(min(image.size)),
-        transforms.Resize((32, 32)),
+        transforms.Resize((20, 20)),
         transforms.ToTensor(),
     ])
 
